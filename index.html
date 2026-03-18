@@ -314,7 +314,6 @@
       <div class="top-bar" style="margin-bottom:12px">
         <div class="search-wrap"><input id="recSearch" placeholder="Chercher..." oninput="renderRecipes()"></div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-secondary" onclick="openImportChoice()">Importer une recette</button>
           <button class="btn btn-primary" onclick="openAdd()">+ Nouvelle recette</button>
         </div>
       </div>
@@ -532,31 +531,6 @@
   </div>
 </div>
 
-<!-- MODAL Import — Choix -->
-<div class="overlay" id="modalImportChoice">
-  <div class="modal" style="max-width:400px">
-    <button class="modal-close" onclick="closeModal('modalImportChoice')">✕</button>
-    <h2 style="margin-bottom:8px">Importer une recette</h2>
-    <p style="font-size:0.85rem;color:#888;margin-bottom:24px">Choisissez votre méthode d'import</p>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <button onclick="closeModal('modalImportChoice');openImportUrl()" style="display:flex;align-items:center;gap:14px;padding:16px 18px;border:2px solid #e8ede4;border-radius:14px;background:white;cursor:pointer;text-align:left;transition:border-color 0.18s;font-family:'Nunito',sans-serif;" onmouseover="this.style.borderColor='#2D5A27'" onmouseout="this.style.borderColor='#e8ede4'">
-        <span style="font-size:1.6rem">🔗</span>
-        <div>
-          <div style="font-weight:800;font-size:0.9rem;color:#1a1a1a">Via une URL</div>
-          <div style="font-size:0.78rem;color:#888;margin-top:2px">Marmiton, 750g, BBC Food...</div>
-        </div>
-      </button>
-      <button onclick="closeModal('modalImportChoice');openImportPhoto()" style="display:flex;align-items:center;gap:14px;padding:16px 18px;border:2px solid #e8ede4;border-radius:14px;background:white;cursor:pointer;text-align:left;transition:border-color 0.18s;font-family:'Nunito',sans-serif;" onmouseover="this.style.borderColor='#2D5A27'" onmouseout="this.style.borderColor='#e8ede4'">
-        <span style="font-size:1.6rem">📷</span>
-        <div>
-          <div style="font-weight:800;font-size:0.9rem;color:#1a1a1a">Via une photo</div>
-          <div style="font-size:0.78rem;color:#888;margin-top:2px">Photo d'un livre, magazine, écran...</div>
-        </div>
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- MODAL Restaurer -->
 <div class="overlay" id="modalRestore">
   <div class="modal" style="max-width:400px">
@@ -570,48 +544,6 @@
   </div>
 </div>
 
-<!-- MODAL Import URL -->
-<div class="overlay" id="modalImport">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modalImport')">✕</button>
-    <h2>Importer depuis une URL</h2>
-    <p style="font-size:0.85rem;color:#888;margin-bottom:18px">Collez le lien d'une recette (Marmiton, 750g, BBC Food, etc.) et l'IA extrait automatiquement les informations.</p>
-    <div class="form-group">
-      <label>URL de la recette *</label>
-      <input id="import-url" placeholder="https://www.marmiton.org/recettes/..." style="width:100%">
-    </div>
-    <div id="import-status" style="display:none;padding:14px;border-radius:10px;font-size:0.85rem;font-weight:600;margin-bottom:12px;"></div>
-    <div class="flex-row" style="justify-content:flex-end;margin-bottom:0;margin-top:8px">
-      <button class="btn btn-secondary" onclick="closeModal('modalImport')">Annuler</button>
-      <button class="btn btn-primary" id="import-btn" onclick="importFromUrl()">Extraire la recette</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL Import Photo -->
-<div class="overlay" id="modalImportPhoto">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('modalImportPhoto')">✕</button>
-    <h2>Importer depuis une photo</h2>
-    <p style="font-size:0.85rem;color:#888;margin-bottom:18px">Prenez en photo une recette (livre, magazine, écran) et l'IA extrait les informations.</p>
-    <div class="form-group">
-      <label>Photo de la recette *</label>
-      <div class="img-upload-zone" onclick="document.getElementById('import-photo-input').click()" id="import-photo-zone">
-        <input type="file" id="import-photo-input" accept="image/*" onchange="previewImportPhoto(this)" style="display:none">
-        <div id="import-photo-placeholder">📷 <strong>Cliquez pour choisir une photo</strong><br><span style="font-size:0.75rem;color:#aaa">JPG, PNG — photo claire de préférence</span></div>
-        <div id="import-photo-preview-wrap" class="img-preview-wrap" style="display:none">
-          <img id="import-photo-preview" class="img-preview">
-          <button class="img-remove" onclick="removeImportPhoto(event)" title="Supprimer">✕</button>
-        </div>
-      </div>
-    </div>
-    <div id="import-photo-status" style="display:none;padding:14px;border-radius:10px;font-size:0.85rem;font-weight:600;margin-bottom:12px;"></div>
-    <div class="flex-row" style="justify-content:flex-end;margin-bottom:0;margin-top:8px">
-      <button class="btn btn-secondary" onclick="closeModal('modalImportPhoto')">Annuler</button>
-      <button class="btn btn-primary" id="import-photo-btn" onclick="importFromPhoto()">Extraire la recette</button>
-    </div>
-  </div>
-</div>
 
 <div class="toast" id="toast"></div>
 
@@ -619,7 +551,7 @@
 const DAYS = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 const MEALS = ['Midi','Soir'];
 const CAT_EMOJI = {'Viande':'','Légumes':'','Fruits':'','Féculents':'','Laitiers':'','Épices':'','Autres':''};
-const DEFAULT_FRIDGE = ['Oeufs','Pommes de terre','Carottes','Oignons','Tomates','Ail','Poulet','Pâtes','Riz','Fromage','Lait','Beurre','Farine','Courgettes','Lardons'];
+const DEFAULT_FRIDGE = [];
 
 let currentImageData = null;
 
@@ -1287,209 +1219,8 @@ renderRecipes();
 if(shopList)renderShopping();
 renderMaison();
 
-function openImportChoice(){
-  document.getElementById('modalImportChoice').classList.add('open');
-}
-
-function openImportUrl(){
-  document.getElementById('import-url').value='';
-  document.getElementById('import-status').style.display='none';
-  document.getElementById('import-btn').disabled=false;
-  document.getElementById('import-btn').textContent='Extraire la recette';
-  document.getElementById('modalImport').classList.add('open');
-}
-
-function openImportPhoto(){
-  document.getElementById('import-photo-input').value='';
-  document.getElementById('import-photo-placeholder').style.display='block';
-  document.getElementById('import-photo-preview-wrap').style.display='none';
-  document.getElementById('import-photo-status').style.display='none';
-  document.getElementById('import-photo-btn').disabled=false;
-  document.getElementById('import-photo-btn').textContent='Extraire la recette';
-  importPhotoBase64 = null;
-  document.getElementById('modalImportPhoto').classList.add('open');
-}
-
-let importPhotoBase64 = null;
-
-function previewImportPhoto(input){
-  const file = input.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    importPhotoBase64 = e.target.result.split(',')[1];
-    document.getElementById('import-photo-preview').src = e.target.result;
-    document.getElementById('import-photo-placeholder').style.display='none';
-    document.getElementById('import-photo-preview-wrap').style.display='flex';
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeImportPhoto(e){
-  e.stopPropagation();
-  importPhotoBase64 = null;
-  document.getElementById('import-photo-input').value='';
-  document.getElementById('import-photo-placeholder').style.display='block';
-  document.getElementById('import-photo-preview-wrap').style.display='none';
-}
-
-async function importFromPhoto(){
-  if(!importPhotoBase64){ showToast('Choisissez une photo d\'abord'); return; }
-  const btn = document.getElementById('import-photo-btn');
-  const status = document.getElementById('import-photo-status');
-  btn.disabled=true;
-  btn.textContent='Analyse en cours...';
-  status.style.display='block';
-  status.style.background='#f0f4ee';
-  status.style.color='#2D5A27';
-  status.textContent='🤖 Analyse de la photo par IA...';
-
-  try {
-    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        messages:[{
-          role:'user',
-          content:[
-            { type:'image', source:{ type:'base64', media_type:'image/jpeg', data: importPhotoBase64 } },
-            { type:'text', text:`Extrais les informations de cette recette visible sur la photo et réponds UNIQUEMENT en JSON valide, sans texte avant ou après, avec cette structure exacte :
-{
-  "name": "Nom de la recette",
-  "time": "Temps de préparation ex: 30 min",
-  "servings": "Nombre de portions ex: 4 personnes",
-  "category": "Plat principal",
-  "ings": [{"qty": "200g", "name": "farine"}, ...],
-  "steps": "Étape 1\\nÉtape 2\\nÉtape 3",
-  "notes": "Conseils éventuels"
-}
-Pour category choisis parmi : Plat principal, Entrée, Soupe, Salade, Dessert, Petit-déjeuner, Encas.` }
-          ]
-        }]
-      })
-    });
-    const aiData = await aiRes.json();
-    const raw = aiData.content?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const rec = JSON.parse(clean);
-
-    closeModal('modalImportPhoto');
-    openAdd();
-    setTimeout(()=>{
-      document.getElementById('f-name').value = rec.name||'';
-      document.getElementById('f-time').value = rec.time||'';
-      document.getElementById('f-servings').value = rec.servings||'';
-      if(rec.category) document.getElementById('f-category').value = rec.category;
-      document.getElementById('f-steps').value = rec.steps||'';
-      document.getElementById('f-notes').value = rec.notes||'';
-      document.getElementById('ingRows').innerHTML='';
-      (rec.ings||[]).forEach(i=>addIngRow(i.qty,i.name));
-      if(!rec.ings?.length) addIngRow();
-      showToast('Recette importée ! Vérifiez et enregistrez.');
-    }, 300);
-
-  } catch(e){
-    status.style.background='#fff0f0';
-    status.style.color='#cc3333';
-    status.textContent='❌ Impossible d\'extraire la recette. Essayez avec une photo plus nette.';
-    btn.disabled=false;
-    btn.textContent='Réessayer';
-    console.error(e);
-  }
-}
-
-async function importFromUrl(){
-  const url = document.getElementById('import-url').value.trim();
-  if(!url){ showToast('Collez une URL valide'); return; }
-
-  const btn = document.getElementById('import-btn');
-  const status = document.getElementById('import-status');
-  btn.disabled = true;
-  btn.textContent = 'Extraction en cours...';
-  status.style.display='block';
-  status.style.background='#f0f4ee';
-  status.style.color='#2D5A27';
-  status.textContent = '🔍 Lecture de la page...';
-
-  try {
-    // Étape 1 : Fetch le contenu de la page
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-    const pageRes = await fetch(proxyUrl);
-    const pageData = await pageRes.json();
-    const html = pageData.contents || '';
-
-    // Extraire le texte brut du HTML
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    // Supprimer scripts/styles
-    tmp.querySelectorAll('script,style,nav,footer,header,aside').forEach(e=>e.remove());
-    const text = tmp.innerText || tmp.textContent || '';
-    const trimmed = text.replace(/\s+/g,' ').trim().slice(0, 6000);
-
-    if(!trimmed){ throw new Error('Page inaccessible ou vide'); }
-
-    status.textContent = '🤖 Analyse par IA...';
-
-    // Étape 2 : Appel à l'API Anthropic
-    const aiRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `Extrais les informations de cette recette et réponds UNIQUEMENT en JSON valide, sans texte avant ou après, avec cette structure exacte :
-{
-  "name": "Nom de la recette",
-  "time": "Temps de préparation ex: 30 min",
-  "servings": "Nombre de portions ex: 4 personnes",
-  "category": "Plat principal",
-  "ings": [{"qty": "200g", "name": "farine"}, ...],
-  "steps": "Étape 1\nÉtape 2\nÉtape 3",
-  "notes": "Conseils éventuels"
-}
-Pour category choisis parmi : Plat principal, Entrée, Soupe, Salade, Dessert, Petit-déjeuner, Encas.
-
-Texte de la page :
-${trimmed}`
-        }]
-      })
-    });
-
-    const aiData = await aiRes.json();
-    const raw = aiData.content?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const rec = JSON.parse(clean);
-
-    // Étape 3 : Pré-remplir le formulaire
-    closeModal('modalImport');
-    openAdd();
-
-    setTimeout(()=>{
-      document.getElementById('f-name').value = rec.name || '';
-      document.getElementById('f-time').value = rec.time || '';
-      document.getElementById('f-servings').value = rec.servings || '';
-      if(rec.category) document.getElementById('f-category').value = rec.category;
-      document.getElementById('f-steps').value = rec.steps || '';
-      document.getElementById('f-notes').value = rec.notes || '';
-      document.getElementById('ingRows').innerHTML='';
-      (rec.ings||[]).forEach(i=>addIngRow(i.qty,i.name));
-      if(!rec.ings?.length) addIngRow();
-      showToast('Recette importée ! Vérifiez et enregistrez.');
-    }, 300);
-
-  } catch(e) {
-    status.style.background='#fff0f0';
-    status.style.color='#cc3333';
-    status.textContent = '❌ Impossible d\'extraire la recette. Essayez un autre lien ou saisissez-la manuellement.';
-    btn.disabled=false;
-    btn.textContent='Réessayer';
-    console.error(e);
-  }
-}
 </script>
+</body>
+</html>
 </body>
 </html>
